@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理记账报价清单 | 专业财税服务</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="vue.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 头部区域 -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo-container">
+                        <img src="https://picsum.photos/200/200" alt="春晓企服" class="logo-image">
+                    </div>
+                    <div class="header-text">
+                        <div class="logo-row">
+                            <h1 class="logo-text">{{ translations[language].logo }}</h1>
+                            <div class="language-switch">
+                                <button class="lang-btn" :class="{ active: language === 'zh' }" @click="switchLanguage('zh')">中文</button>
+                                <button class="lang-btn" :class="{ active: language === 'en' }" @click="switchLanguage('en')">English</button>
+                            </div>
+                        </div>
+                        <p class="slogan">{{ translations[language].slogan }}</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 英雄区域 -->
+        <section class="hero">
+            <div class="container">
+                <h2>{{ translations[language].heroTitle }}</h2>
+                <p>{{ translations[language].heroSubtitle }}</p>
+            </div>
+        </section>
+
+        <!-- 套餐选择区域 -->
+        <section class="pricing">
+            <div class="container">
+                <h3>{{ translations[language].pricingTitle }}</h3>
+                <div class="pricing-cards">
+                    <!-- 基础版套餐 -->
+                    <div class="pricing-card" :class="{ active: selectedPlan === 'basic' }" @click="selectPlan('basic')">
+                        <div class="card-header">
+                            <h4>{{ translations[language].basicPlan.title }}</h4>
+                            <p class="price">{{ translations[language].basicPlan.price }}<span>{{ translations[language].priceUnit }}</span></p>
+                        </div>
+                        <div class="card-body">
+                            <p class="description">{{ translations[language].basicPlan.description }}</p>
+                            <p class="service-description">{{ translations[language].basicPlan.serviceDescription }}</p>
+                        </div>
+                    </div>
+
+                    <!-- 常规业务版套餐 -->
+                    <div class="pricing-card" :class="{ active: selectedPlan === 'standard' }" @click="selectPlan('standard')">
+                        <div class="card-header">
+                            <h4>{{ translations[language].standardPlan.title }}</h4>
+                            <p class="price">{{ translations[language].standardPlan.price }}<span>{{ translations[language].priceUnit }}</span></p>
+                        </div>
+                        <div class="card-body">
+                            <p class="description">{{ translations[language].standardPlan.description }}</p>
+                            <p class="service-description">{{ translations[language].standardPlan.serviceDescription }}</p>
+                        </div>
+                    </div>
+
+                    <!-- 一般纳税人版套餐 -->
+                    <div class="pricing-card" :class="{ active: selectedPlan === 'general' }" @click="selectPlan('general')">
+                        <div class="card-header">
+                            <h4>{{ translations[language].generalPlan.title }}</h4>
+                            <p class="price">{{ translations[language].generalPlan.price }}<span>{{ translations[language].priceUnit }}</span></p>
+                        </div>
+                        <div class="card-body">
+                            <p class="description">{{ translations[language].generalPlan.description }}</p>
+                            <p class="service-description">{{ translations[language].generalPlan.serviceDescription }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 套餐推荐工具 -->
+        <section class="recommendation-tool">
+            <div class="container">
+                <h3>{{ translations[language].recommendationTitle }}</h3>
+                <p class="tool-description">{{ translations[language].recommendationDescription }}</p>
+                
+                <div class="checkbox-container">
+                    <div class="checkbox-group">
+                        <div class="checkbox-item" v-for="(item, index) in translations[language].checkboxItems" :key="index">
+                            <input type="checkbox" :id="'checkbox-' + index" :value="item.value" v-model="selectedOptions">
+                            <label :for="'checkbox-' + index">{{ item.label }}</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-result" v-if="recommendedPlan">
+                    <h4>{{ translations[language].recommendedTitle }}：</h4>
+                    <div class="recommended-plan" :class="'plan-' + recommendedPlan">
+                        <h5>{{ recommendedPlanName }}</h5>
+                        <p class="recommended-price">{{ recommendedPlanPrice }}</p>
+                        <p class="recommended-reason">{{ recommendedReason }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 服务内容详情 -->
+        <section class="services">
+            <div class="container">
+                <h3>{{ translations[language].servicesTitle }}</h3>
+                <div class="services-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{ translations[language].serviceItem }}</th>
+                                <th>{{ translations[language].basicPlan.title }}</th>
+                                <th>{{ translations[language].standardPlan.title }}</th>
+                                <th>{{ translations[language].generalPlan.title }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[0] }}</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[1] }}</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[2] }}</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[3] }}</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[4] }}</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[5] }}</td>
+                                <td class="no">✗</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[6] }}</td>
+                                <td class="no">✗</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[7] }}</td>
+                                <td class="no">✗</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[8] }}</td>
+                                <td class="no">✗</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[9] }}</td>
+                                <td class="no">✗</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translations[language].serviceItems[10] }}</td>
+                                <td class="no">✗</td>
+                                <td class="yes">✓</td>
+                                <td class="yes">✓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ部分 -->
+        <section class="faq">
+            <div class="container">
+                <h3>{{ translations[language].faqTitle }}</h3>
+                <div class="faq-items">
+                    <div class="faq-item" v-for="(item, index) in translations[language].faqItems" :key="index">
+                        <div class="faq-question" @click="toggleFaq(index)">
+                            <span>{{ item.question }}</span>
+                            <span class="toggle-icon">{{ item.open ? '−' : '+' }}</span>
+                        </div>
+                        <div class="faq-answer" v-show="item.open">
+                            {{ item.answer }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 额外服务部分 -->
+        <section class="additional-services">
+            <div class="container">
+                <h3>{{ translations[language].additionalServicesTitle }}</h3>
+                <div class="additional-list">
+                    <p v-for="(service, index) in translations[language].additionalServices" :key="index">• {{ service }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 法律提醒 -->
+        <section class="legal-reminder">
+            <div class="container">
+                <p class="reminder-text">{{ translations[language].legalReminder }}</p>
+            </div>
+        </section>
+
+        <!-- 联系我们部分 -->
+        <section class="contact">
+            <div class="container">
+                <h3>{{ translations[language].contactTitle }}</h3>
+                <div class="contact-info">
+                    <p>{{ translations[language].contactDescription }}</p>
+                    <button class="contact-btn" @click="showConsultOptions = true">{{ translations[language].contactButton }}</button>
+                </div>
+                
+                <!-- 咨询选项弹窗 -->
+                <div class="consult-modal" v-if="showConsultOptions">
+                    <div class="modal-content">
+                        <h4>{{ translations[language].consultTitle }}</h4>
+                        <div class="consult-options">
+                            <div class="consult-option" @click="makePhoneCall">
+                                <h5>{{ translations[language].phoneConsult }}</h5>
+                                <p>138-1035-9824</p>
+                            </div>
+                            <div class="consult-option">
+                                <h5>{{ translations[language].wechatConsult }}</h5>
+                                <div class="qrcode-container">
+                                    <img src="https://img.freepik.com/free-vector/qr-code-template-vector-illustration_1284-6615.jpg" :alt="translations[language].qrcodeAlt" class="qrcode-image">
+                                </div>
+                                <p>{{ translations[language].scanQrcode }}</p>
+                            </div>
+                        </div>
+                        <button class="close-btn" @click="showConsultOptions = false">{{ translations[language].closeButton }}</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部区域 -->
+        <footer class="footer">
+            <div class="container">
+                <p>{{ translations[language].footerText }}</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
